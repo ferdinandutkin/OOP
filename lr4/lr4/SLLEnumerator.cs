@@ -1,8 +1,9 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace SinglyLinkedList
 {
-    class SinglyLinkedListEnumerator<T> : IEnumerator
+    class SinglyLinkedListEnumerator<T> : IEnumerator<T>
     {
         private Node<T> current;
         private Node<T> head;
@@ -11,9 +12,12 @@ namespace SinglyLinkedList
         {
             current = node;
             head = node;
-
         }
-        public object Current { get { return current.Value; } }
+        public T Current => current.Value;
+        object IEnumerator.Current => Current;
+
+        void System.IDisposable.Dispose() { }
+
 
         public bool MoveNext()
         {
@@ -27,9 +31,6 @@ namespace SinglyLinkedList
                 return false;
             }
         }
-        public void Reset()
-        {
-            current = head;
-        }
+        public void Reset() => current = head;
     }
 }

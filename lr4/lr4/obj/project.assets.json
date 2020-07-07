@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ferdinand\\source\\repos\\lr4\\lr4\\lr4.csproj",
+      "projectUniqueName": "C:\\Users\\ferdinand\\Source\\Repos\\OOP\\lr4\\lr4\\lr4.csproj",
       "projectName": "lr4",
-      "projectPath": "C:\\Users\\ferdinand\\source\\repos\\lr4\\lr4\\lr4.csproj",
+      "projectPath": "C:\\Users\\ferdinand\\Source\\Repos\\OOP\\lr4\\lr4\\lr4.csproj",
       "packagesPath": "C:\\Users\\ferdinand\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ferdinand\\source\\repos\\lr4\\lr4\\obj\\",
+      "outputPath": "C:\\Users\\ferdinand\\Source\\Repos\\OOP\\lr4\\lr4\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ferdinand\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -58,7 +58,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,17 +1,9 @@
 ﻿
 using System.Collections;
-
+using System.Collections.Generic;
 
 namespace SinglyLinkedList
 {
-    interface ISinglyLinkedList<T>
-    {
-        void Add(T item);
-
-        T this[int index] { get; }
-
-        void Delete(T item);
-    }
 
     public class Node<T>
     {
@@ -19,18 +11,15 @@ namespace SinglyLinkedList
 
         public Node<T> Next { get; set; }
 
-        public Node(T value)
-        {
-            Value = value;
-        }
-        public Node() => Value = default; //дефолтное значение этого типа
+        public Node(T value) => Value = value;
+        public Node() => Value = default;  
     }
 
-    class MyList<T> : IEnumerable, ISinglyLinkedList<T>
+    class MyList<T> : IEnumerable<T>
     {
-        public Node<T> Head { get; protected set; }
-        public Node<T> Tail { get; protected set; }
-        public int Count { get; protected set; }
+        private Node<T> Head { get; set; }
+        private Node<T> Tail { get; set; }
+        public int Size { get; private set; }
 
         public T this[int index]
         {
@@ -46,13 +35,27 @@ namespace SinglyLinkedList
                 }
                 return default;
             }
+            set
+            {
+
+
+                if (index <= Size)
+                {
+                    Node<T> current = Head;
+                    for (int i = 0; i < index; i++)
+                        current = current.Next;
+                    current.Value = value;
+
+                }
+
+            }
         }
 
         public MyList()
         {
             Head = null;
             Tail = null;
-            Count = 0;
+            Size = 0;
         }
 
         public MyList(T value)
@@ -60,11 +63,11 @@ namespace SinglyLinkedList
             Node<T> node = new Node<T>(value);
             Head = node;
             Tail = node;
-            Count = 1;
+            Size = 1;
         }
         public MyList(T value, params T[] values) : this(value)
         {
-            foreach (var val in values)
+            foreach (T val in values)
                 Add(val);
         }
 
@@ -78,40 +81,36 @@ namespace SinglyLinkedList
                 Tail.Next = node;
 
             Tail = node;
-            Count++;
+            Size++;
         }
 
 
         public void Delete(T value)
         {
-            var current = Head;
-            var previous = current;
+            var curr = Head;
+            var prev = curr;
 
-            while (current != null)
+            while (curr != null)
             {
-                if (current.Value.Equals(value))
+                if (curr.Value.Equals(value))
                 {
-                    if (current == Head)
-                        Head = current.Next;
-                    else if(current == Tail)
-                        Tail = previous;
+                    if (curr == Head)
+                        Head = curr.Next;
+                    else if (curr == Tail)
+                        Tail = prev;
                     else
-                        previous.Next = current.Next;
+                        prev.Next = curr.Next;
                     return;
                 }
-                previous = current;
-                current = current.Next;
+                prev = curr;
+                curr = curr.Next;
             }
         }
 
-        public IEnumerator GetEnumerator()
-        {
-            Node<T> preHead = new Node<T>
-            {
-                Next = Head
-            };
-            return new SinglyLinkedListEnumerator<T>(preHead);
-        }
+        public IEnumerator<T> GetEnumerator() => new SinglyLinkedListEnumerator<T>(new Node<T> { Next = Head });
+
+        IEnumerator IEnumerable.GetEnumerator() => new SinglyLinkedListEnumerator<T>(new Node<T> { Next = Head });
+
 
     }
 }
