@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
+
+//приеиньте писать энумератор чтобы узнать о yield
+/*
 namespace SinglyLinkedList
 {
     class SinglyLinkedListEnumerator<T> : IEnumerator<T>
@@ -34,3 +37,4 @@ namespace SinglyLinkedList
         public void Reset() => current = head;
     }
 }
+*/

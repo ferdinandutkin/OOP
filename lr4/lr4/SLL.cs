@@ -1,5 +1,6 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace SinglyLinkedList
@@ -12,10 +13,10 @@ namespace SinglyLinkedList
         public Node<T> Next { get; set; }
 
         public Node(T value) => Value = value;
-        public Node() => Value = default;  
+        public Node() => Value = default;
     }
 
-    class MyList<T> : IEnumerable<T>
+    public class MyList<T> : IEnumerable<T>
     {
         private Node<T> Head { get; set; }
         private Node<T> Tail { get; set; }
@@ -25,31 +26,21 @@ namespace SinglyLinkedList
         {
             get
             {
-                Node<T> current = Head;
-
-                if (current != null)
-                {
-                    for (int i = 0; i < index; i++)
-                        current = current.Next;
-                    return current.Value;
-                }
-                return default;
+                return this.ElementAtOrDefault(index);
             }
             set
             {
-
-
-                if (index <= Size)
+                if (index < Size)
                 {
                     Node<T> current = Head;
                     for (int i = 0; i < index; i++)
                         current = current.Next;
                     current.Value = value;
-
                 }
-
             }
         }
+
+        public override bool Equals(object obj) => this == (MyList<T>)obj;
 
         public MyList()
         {
@@ -65,7 +56,9 @@ namespace SinglyLinkedList
             Tail = node;
             Size = 1;
         }
-        public MyList(T value, params T[] values) : this(value)
+        public MyList(T value, params T[] values) : this(value) => Add(values);
+
+        public void Add(params T[] values)
         {
             foreach (T val in values)
                 Add(val);
@@ -84,8 +77,29 @@ namespace SinglyLinkedList
             Size++;
         }
 
+        public void Delete(int index)
+        {
+            int count = 0;
+            var curr = Head;
+            var prev = curr;
 
-        public void Delete(T value)
+            while (count <= index)
+            {
+                if (count == index)
+                {
+                    prev.Next = curr.Next;
+                    curr = null;
+                }
+                else
+                {
+                    prev = curr;
+                    curr = curr.Next;
+                }
+            }
+
+        }
+
+        public void DeleteByVal(T value)
         {
             var curr = Head;
             var prev = curr;
@@ -107,10 +121,88 @@ namespace SinglyLinkedList
             }
         }
 
-        public IEnumerator<T> GetEnumerator() => new SinglyLinkedListEnumerator<T>(new Node<T> { Next = Head });
+        static public bool operator ==(MyList<T> l, MyList<T> r)
+        {
+            if (l.Size != r.Size)
+                return false;
+            else
+            {
+                bool areEqual = true;
+                for (int i = 0; i < l.Size && areEqual; i++)
+                    areEqual &= l[i].Equals(r[i]);
+                return areEqual;
+            }
 
-        IEnumerator IEnumerable.GetEnumerator() => new SinglyLinkedListEnumerator<T>(new Node<T> { Next = Head });
+        }
+
+        public static bool operator <(MyList<T> l, MyList<T> r) //ez
+        {
+            ref var refl = ref l;
+            foreach (T el in r)
+                refl.Add(el);
+            return true;
+        }
+
+        static public bool operator >(MyList<T> l, MyList<T> r) => r < l;
 
 
+        static public MyList<T> operator +(MyList<T> l, MyList<T> r)
+        {
+            foreach (var el in r)
+                l.Add(el);
+            return l;
+
+        }
+
+
+        static public bool operator !=(MyList<T> l, MyList<T> r) => !(l == r);
+
+        static public MyList<T> operator !(MyList<T> list) //побитовое НЕ определено только для этих типов ничего не знаю
+        {
+            if (list is MyList<int> intlist)
+            {
+                for (int i = 0; i < intlist.Size; i++)
+                    intlist[i] = ~intlist[i];
+                return intlist as MyList<T>;
+            }
+
+            else if (list is MyList<uint> uintlist)
+            {
+                for (int i = 0; i < uintlist.Size; i++)
+                    uintlist[i] = ~uintlist[i];
+                return uintlist as MyList<T>;
+            }
+
+            else if (list is MyList<ulong> ulonglist)
+            {
+                for (int i = 0; i < ulonglist.Size; i++)
+                    ulonglist[i] = ~ulonglist[i];
+                return ulonglist as MyList<T>;
+            }
+            return list;
+
+
+        }
+
+
+
+
+
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            var curr = Head;
+            while (curr != null)
+            {
+                yield return curr.Value;
+                curr = curr.Next;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
+
+
 }
+
+
